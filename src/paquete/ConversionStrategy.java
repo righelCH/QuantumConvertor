@@ -10,7 +10,7 @@ public class ConversionStrategy {
 	private String unidadInicial;
 	private String unidadFinal;
 
-	// CONSTRUCTOR, para no tener q poner todos los parametros en cada metro
+	// CONSTRUCTOR, para no tener q poner todos los parametros en cada metodo
 	public ConversionStrategy(String tipoMedicion, Double cantidad, String unidadInicial,
 			String unidadFinal) {
 		this.tipoMedicion = ConversionesMap.getTiposConversion(tipoMedicion);

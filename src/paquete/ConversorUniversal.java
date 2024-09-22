@@ -43,6 +43,8 @@ public class ConversorUniversal extends JFrame {
 	private String unidadInicial;
 	private String unidadFinal;
 	private String aux;
+	private String auxf;
+
 	private QuantumConvertor quantumConvertor = new QuantumConvertor();
 
 	/**
@@ -80,10 +82,9 @@ public class ConversorUniversal extends JFrame {
 		setTitle("QuantumConvertor⚡ - @righelCH");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 483, 314);
-		setLocationRelativeTo(null);//si se coloca antes de setBounds no funciona
+		setLocationRelativeTo(null);// si se coloca antes de setBounds no funciona
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -96,7 +97,7 @@ public class ConversorUniversal extends JFrame {
 		t_inicial = new JTextField();
 		t_inicial.setFont(new Font("JetBrains Mono NL Medium", Font.PLAIN, 13));
 		t_inicial.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 255, 64)));
-		t_inicial.setBounds(34, 64, 144, 29);
+		t_inicial.setBounds(34, 64, 155, 28);
 		contentPane.add(t_inicial);
 		t_inicial.setColumns(10);
 
@@ -126,42 +127,54 @@ public class ConversorUniversal extends JFrame {
 		c_unidadInicial.setFont(new Font("JetBrains Mono ExtraLight", Font.PLAIN, 11));
 		c_unidadInicial.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 255, 255)));
 
-		c_unidadInicial.setBounds(34, 96, 144, 26);
+		c_unidadInicial.setBounds(34, 96, 155, 26);
 		contentPane.add(c_unidadInicial);
 		c_unidadFinal.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 255, 255)));
 		c_unidadFinal.setFont(new Font("JetBrains Mono NL ExtraLight", Font.PLAIN, 11));
-		c_unidadFinal.setBounds(265, 96, 144, 26);
+		c_unidadFinal.setBounds(254, 96, 155, 26);
 		contentPane.add(c_unidadFinal);
 
 		tfinal = new JTextField();
 		tfinal.setText("0.0");
+		tfinal.setEnabled(false);
 		tfinal.setFont(new Font("JetBrains Mono NL Medium", Font.PLAIN, 13));
 		tfinal.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 255, 64)));
 		tfinal.setColumns(10);
-		tfinal.setBounds(265, 64, 144, 29);
+		tfinal.setBounds(254, 64, 155, 29);
 		contentPane.add(tfinal);
 
 		obtenerItemsComboBox();
+		realizarConversion();
 		// se procede a la conversion si se detecta cambion en la eleccion de unidad y
 		// cantidad insertada
 		ctipoMedicion.addActionListener(e -> {
 			obtenerItemsComboBox();
-			realizarConversion();
+			realizarConversion(); // para q coga los valores por defecto en la primera inicialización
 		});
 		c_unidadInicial.addActionListener(e -> realizarConversion());
 		c_unidadFinal.addActionListener(e -> realizarConversion());
+
 		t_inicial.getDocument().addDocumentListener((DocumentListenerSimplificado) e -> realizarConversion());
 	}
 
 	void obtenerItemsComboBox() {
+
 		try {
 			Map<String, Function<Double, Double>> medidaSeleccionada = tipoMedicion();
 
 			String[] items = medidaSeleccionada.keySet().toArray(new String[0]); // Se obtienen los nombres de las
 																					// medidas con KEY
 			c_unidadInicial.setModel(new JComboBox<>(items).getModel()); // getModel para
-			c_unidadFinal.setModel(new JComboBox<>(invertirArray(items)).getModel()); // Se obtiene lo mismo pero la
-																						// lista invertida
+			c_unidadFinal.setModel(new JComboBox<>(invertirArray(items)).getModel());
+
+			// aqui se establece por defecto los valores de los items del comboBox, para que
+			// no aparezca la caja vacia
+			// los item nulos obtienen el 1º valor del comboBox
+			// se asigna estos valores cada vez q se cambia de tipo de medida
+			c_unidadInicial.setSelectedIndex(0);
+			c_unidadFinal.setSelectedIndex(0);
+
+			System.out.println("asignacion default en nulos");
 		} catch (NullPointerException e) {
 			System.out.println("error en obtenerItem..");
 		}
@@ -175,29 +188,36 @@ public class ConversorUniversal extends JFrame {
 	}
 
 	Map<String, Function<Double, Double>> tipoMedicion() {
+		if (ctipoMedicion.getSelectedItem() == null) {
+			ctipoMedicion.setSelectedIndex(0);
+		}
 		String seleccion = (String) ctipoMedicion.getSelectedItem();
 		return ConversionesMap.getTiposConversion(seleccion);
 	}
 
 	void realizarConversion() {
+		// intercambiarSiSonIguales();
 		// Tanto unidadInicial como final ya tienen guardado la opcion anterior, por eso
 		// en intercambiarSiSonIguales() se vuelve a coger la actual unidad seleccionada
 		// que seria la ACTUAL
 		// la unidad sera intercambiada por la anterior guardada en aux
-		try {
-//			System.out.println("UNIDADES GUARDADAS ANTES DEL CAMBIO: " + "\nUnidadInicialAnterior: " + unidadInicial
-//					+ "\nUnidadFinalAnterior: " + unidadFinal);  Comprobando...
-			cantidad = Double.parseDouble(t_inicial.getText());
 
-			intercambiarSiSonIguales();
-			aux = unidadInicial; // aqui se guarda la uIncial ya q esra sera reemplazada y perdera su valor
-									// original
+		try {
+
+			aux = unidadInicial;
+			auxf = unidadFinal;
+
 			unidadInicial = (String) c_unidadInicial.getSelectedItem();
 			unidadFinal = (String) c_unidadFinal.getSelectedItem();
+
+			intercambiarSiSonIguales(unidadInicial, unidadFinal);
+
+			cantidad = Double.parseDouble(t_inicial.getText());
 			String tipoMedicion = (String) ctipoMedicion.getSelectedItem();
 			laviso.setText(null); // paea borrar el aviso anterior
 			Double resultado = quantumConvertor.convert(tipoMedicion, cantidad, unidadInicial, unidadFinal);
-			tfinal.setText(String.valueOf(resultado));
+		
+			tfinal.setText(String.format("%.7f",resultado));
 		} catch (NumberFormatException e) { // en caso de espacio blanco, vacio o caracter especial o alfabetico
 			laviso.setText("Introduce un valor valido");
 			tfinal.setText(null);
@@ -207,14 +227,10 @@ public class ConversorUniversal extends JFrame {
 	// si son iguales se intercambian los items asi siempre estaran en unidades
 	// distintas, por eso ademas el metodo de arrayinverso como complemento en la
 	// visualizacion
-	void intercambiarSiSonIguales() {
+	void intercambiarSiSonIguales(String uInicial, String uFinal) {
 
-		if (c_unidadInicial.getSelectedItem() == null || c_unidadFinal.getSelectedItem() == null) {
-			laviso.setText("No has seleccionado el tipo de unidad ");
-			return;
-		}
-		if (c_unidadInicial.getSelectedItem().equals(c_unidadFinal.getSelectedItem())) {
-			c_unidadInicial.setSelectedItem(unidadFinal);
+		if (uInicial.equals(uFinal)) {
+			c_unidadInicial.setSelectedItem(auxf);
 			c_unidadFinal.setSelectedItem(aux);// se reemplaza por la origina inicial ya q la nuev ainicial es igual a
 												// final
 		}
