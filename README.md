@@ -1,22 +1,39 @@
 
-# QuantumConvertor⚡
+## QuantumConvertor ⚡
 
-## Descripción
-QuantumConvertor es un programa en Java que permite convertir unidades de medida de manera sencilla.
-Admite conversiones en diversas categorías, incluyendo longitud, tiempo, velocidad, temperatura, área, masa, presión y más.
-Puedes utilizarlo a través de la interfaz de línea de comandos (CLI) o mediante una interfaz gráfica de usuario (GUI), que se activa por defecto.
+### Descripción
+QuantumConvertor es un programa en Java que facilita la conversión de unidades de medida de manera sencilla y eficiente. Soporta conversiones en diversas categorías, incluyendo:
+- **Longitud**
+- **Área**
+- **Volumen**
+- **Peso**
+- **Datos**
+- **Tiempo**
+- **Velocidad**
+- **Temperatura**
+- **Frecuencia**
+- **Ángulo Plano**
+- **Presión**
+  
+ Puedes usar la aplicación a través de la terminal o simplemente ejecutando el archivo descargado.
+ Asegúrate de tener Java instalado en tu sistema.
 
-## Cómo Usar
-### Ejecución desde la Línea de Comandos (CLI)
-1. Asegúrate de tener Java instalado en tu sistema.
-2. Abre la terminal.
-3. Navega a la carpeta donde se encuentra el archivo `QuantumConvertor.jar`.
-4. Ejecuta el siguiente comando:
+### Cómo Usar
+
+#### Con la App 
+Ejecuta el archivo JAR 
+  ```bash
+java -jar QuantumConvertor.jar
+```
+O haz clic [aquí](https://github.com/righelCH/QuantumConvertor/blob/fa1df8bb941f720f24bcb4665c87099ee03b43e2/QuantumConvertor.jar) para descargarlo.
+
+#### Desde la Terminal
+1. Abre la terminal.
+2. Navega a la carpeta donde se encuentra el archivo `QuantumConvertor.jar`.
+3. Ejecuta el siguiente comando:
    ```bash
-   java -jar QuantumConvertor.jar
-
-Ejecutable
-Si prefieres no lidiar con el archivo .jar, simplemente descárgate el ejecutable que está disponible en este repositorio. También puedes encontrar el archivo .jar aquí.
-
-Créditos
-Este proyecto es de Righel CH y está bajo la GNU General Public License v3 (GPL-3.0). Si decides utilizar o modificar el código, ¡agradecería que me dieras crédito!
+   java -jar QuantumConvertor.jar <tipoMedicion> <cantidad> <unidadInicial> <unidadFinal>
+   ```
+Ejemplo:
+```bash
+   java -jar QuantumConvertor.jar Longitud 7 Metro Centimetro
