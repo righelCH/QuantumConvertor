@@ -242,25 +242,8 @@ public class ConversionesMap {
 	}
 
 	public static void main(String[] args) {
-	    // Valor a convertir
-	    double valor = 1.0;
-
-	    // Iterar sobre cada tipo de conversión
-	    for (String tipo : ConversionesMap.itemsConversiones()) {
-	        System.out.println("Conversiones para: " + tipo);
-	        
-	        // Obtener el mapa de conversiones para el tipo actual
-	        Map<String, Function<Double, Double>> conversiones = ConversionesMap.getTiposConversion(tipo);
-	        
-	        // Iterar sobre cada unidad en el mapa de conversiones
-	        for (String unidad : conversiones.keySet()) {
-	            // Realizar la conversión
-	            double resultado = conversiones.get(unidad).apply(valor);
-	            System.out.printf("%s: %.5f%n", unidad, resultado);
-	        }
-	        
-	        System.out.println(); // Línea en blanco para separar tipos de conversiones
+	  
 	    }
-	}
+	
 
 }
